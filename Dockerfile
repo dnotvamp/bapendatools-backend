@@ -1,56 +1,48 @@
-FROM node:20
-
-# =====================================
-# 1️⃣ Install system dependencies
-# =====================================
-RUN apt-get update && \
-    apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-venv \
-    libgl1 \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+# =========================
+# STAGE 1: Build
+# =========================
+FROM node:20 AS builder
 
 WORKDIR /app
 
-# =====================================
-# 2️⃣ Install Node dependencies
-# =====================================
 COPY package*.json ./
 RUN npm install
 
-# =====================================
-# 3️⃣ Create Python virtual environment
-# =====================================
+COPY . .
+RUN npm run build
+
+
+# =========================
+# STAGE 2: Production
+# =========================
+FROM node:20-slim
+
+# Install python minimal
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy only production files
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY requirements.txt ./
+COPY autocrop_folder.py ./
+COPY imgestoword.py ./
+COPY organize_images.py ./
+COPY best.pt ./
+
+# Install node prod only
+RUN npm install --omit=dev
+
+# Python venv
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Upgrade pip inside venv
 RUN pip install --upgrade pip
-
-# =====================================
-# 4️⃣ Install Python dependencies
-# =====================================
-COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# =====================================
-# 5️⃣ Copy project files
-# =====================================
-COPY . .
-
-# =====================================
-# 6️⃣ Build NestJS
-# =====================================
-RUN npm run build
-
-# =====================================
-# 7️⃣ Railway Port
-# =====================================
 EXPOSE 8080
 
-# =====================================
-# 8️⃣ Start App
-# =====================================
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/main.js"]
