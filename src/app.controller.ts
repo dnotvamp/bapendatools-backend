@@ -29,8 +29,9 @@ export class AppController {
   }
 
 private getPythonExecutable() {
-  return '/bin/python3';
+  return process.env.PYTHON_EXECUTABLE || 'python3';
 }
+
 
   // Endpoint 1: AutoCrop
   @Post('AutoCrop')
