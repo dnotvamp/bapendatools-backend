@@ -1,4 +1,6 @@
-Pillow
-python-docx
-opencv-python
+ultralytics
+torch
+torchvision
+opencv-python-headless
 numpy
+Pillow
