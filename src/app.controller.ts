@@ -32,7 +32,6 @@ private getPythonExecutable() {
   return process.env.PYTHON_EXECUTABLE || 'python3';
 }
 
-
   // Endpoint 1: AutoCrop
   @Post('AutoCrop')
   @ApiConsumes('multipart/form-data')
