@@ -1,41 +1,33 @@
 FROM node:20
 
-# Install Python + pip
+# Install python
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
+    apt-get install -y python3 python3-pip python3-venv && \
     rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# ==============================
-# 1️⃣ Install Node dependencies
-# ==============================
+# Copy package.json
 COPY package*.json ./
 RUN npm install
 
 # ==============================
-# 2️⃣ Install Python dependencies
+# 🔥 BUAT VIRTUAL ENV
 # ==============================
-COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# ==============================
-# 3️⃣ Copy all project files
-# ==============================
+# Copy requirements
+COPY requirements.txt ./
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project
 COPY . .
 
-# ==============================
-# 4️⃣ Build NestJS
-# ==============================
+# Build Nest
 RUN npm run build
 
-# ==============================
-# 5️⃣ Expose Railway port
-# ==============================
 EXPOSE 8080
 
-# ==============================
-# 6️⃣ Start app
-# ==============================
 CMD ["npm", "run", "start"]
