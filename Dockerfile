@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source
 COPY . .
@@ -26,9 +26,8 @@ FROM node:20-slim
 # Install system deps for OpenCV & YOLO
 # -------------------------
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
     python3 \
-    python3-pip \
     python3-venv \
     libgl1 \
     libglib2.0-0 \
@@ -47,6 +46,11 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 
 # -------------------------
+# Install Node production deps
+# -------------------------
+RUN npm ci --omit=dev
+
+# -------------------------
 # Copy Python files
 # -------------------------
 COPY requirements.txt ./
@@ -56,21 +60,18 @@ COPY organize_images.py ./
 COPY best.pt ./
 
 # -------------------------
-# Install Node production deps only
-# -------------------------
-RUN npm install --omit=dev
-
-# -------------------------
 # Create Python virtualenv
 # -------------------------
 RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
-# -------------------------
-# Install Python deps
-# -------------------------
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip inside venv
+RUN /opt/venv/bin/pip install --upgrade pip
+
+# Install Python dependencies using venv pip (AMAN dari PEP 668)
+RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Activate venv for runtime
+ENV PATH="/opt/venv/bin:$PATH"
 
 # -------------------------
 # Set Railway port
