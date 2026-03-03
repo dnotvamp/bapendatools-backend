@@ -9,7 +9,11 @@ async function bootstrap() {
   // Swagger Configuration
   // =========================
   const config = new DocumentBuilder()
+<<<<<<< HEAD
     .setTitle('BAPENDA TOOLS')
+=======
+    .setTitle('Tools Heri')
+>>>>>>> 902deeabc8a5a76b7ce0824ce7a82266bcd9c8f9
     .setDescription('Berikan Kemudahan Dalam Administrasi')
     .setVersion('1.0')
     .build();

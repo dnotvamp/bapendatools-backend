@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+<<<<<<< HEAD
     "build": "nest build",
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
@@ -25,6 +26,21 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "prisma": "^6.19.2",
+=======
+  "build": "nest build",
+  "start": "node dist/main.js",
+  "start:dev": "nest start --watch",
+  "start:prod": "node dist/main.js"
+},
+
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.1.10",
+    "@nestjs/swagger": "^11.2.3",
+    "archiver": "^7.0.1",
+    "multer": "^2.0.2",
+>>>>>>> 902deeabc8a5a76b7ce0824ce7a82266bcd9c8f9
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
@@ -36,12 +52,18 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+<<<<<<< HEAD
     "@types/bcrypt": "^6.0.0",
+=======
+>>>>>>> 902deeabc8a5a76b7ce0824ce7a82266bcd9c8f9
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.10.7",
+<<<<<<< HEAD
     "@types/passport-jwt": "^4.0.1",
+=======
+>>>>>>> 902deeabc8a5a76b7ce0824ce7a82266bcd9c8f9
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "eslint": "^9.18.0",
