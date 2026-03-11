@@ -49,6 +49,7 @@ COPY --from=builder /app/package*.json ./
 # Install Node production deps
 # -------------------------
 RUN npm ci --omit=dev
+RUN npx prisma generate
 
 # -------------------------
 # Copy Python files
